@@ -33,9 +33,9 @@ proc configureRelease() =
     switch("dead_code_elim", "on")
     switch("debug", "off")
     switch("verbose", "off")
+    switch("d", "release")
 
 task release, "release build":
-    switch("d", "release")
     configureRelease()
     setCommand "build"
 
@@ -44,7 +44,6 @@ task static, "static release build. Musl if possible":
     if exe != "":
         switch("gcc.exe", exe)
         switch("gcc.linkerexe", exe)
-    switch("d", "release")
     switch("passL", "-static")
     configureRelease()
     setCommand "build"
