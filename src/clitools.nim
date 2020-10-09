@@ -11,8 +11,6 @@ type
     prefix*: string
     prefixCharacter*: string
     stripPrefix*: bool
-    verbose*: bool
-    skipMissing*: bool
     case kind*: CommandType 
     of ctPipe: discard
     of ctBatch:
@@ -39,9 +37,7 @@ proc parseCommandLineOrQuit*() : CommandLineArguments =
     help("Replaces environment variables in specified files")
     option("-c", "--character", help="Variable expanded character (for variables like ${VAR} it should be $)", default = "$")
     option("-p", "--prefix", help="Prefix of environment variables to include. E.g REACT_APP_")
-    flag("-m", "--skip-missing", help="Do not substitute missing variables without default values.")
     flag("-s", "--strip-prefix", help="Strip prefix on replace. If prefix is `REACT_APP_`, then `${VAR}` will be taken from `env.REACT_APP_VAR`")
-    flag("-v", "--verbose", help="Verbose logging")
     command("batch"):
       arg("files", help="List of files or directories to process", nargs = -1)
       run:
@@ -49,18 +45,14 @@ proc parseCommandLineOrQuit*() : CommandLineArguments =
           kind: ctBatch,
           paths: findFiles(opts.files),
           prefixCharacter: opts.parentOpts.character,
-          skipMissing: opts.parentOpts.skipmissing,
           prefix: opts.parentOpts.prefix,
           stripPrefix: opts.parentOpts.stripPrefix,
-          verbose: opts.parentOpts.verbose
         )
     command("pipe"):
       discard
     run:
       cliArgs.prefixCharacter = opts.character
-      cliArgs.skipMissing = opts.skipmissing
       cliArgs.prefix = opts.prefix
       cliArgs.stripPrefix = opts.stripPrefix
-      cliArgs.verbose= opts.verbose
   myParser.run(os.commandLineParams())
   return cliArgs
