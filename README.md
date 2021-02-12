@@ -41,22 +41,22 @@ $ echo '${MY_VAR}' | ./envrepl
 Value
 
 $ echo '${MISSING_VAR}' | ./envrepl
-defaultValue
+${MISSING_VAR}
 
 $ echo '${MISSING_VAR:defaultValue}' | ./envrepl
-${MISSING_VAR}
+defaultValue
 
 $ echo '@{MY_VAR}' | ./envrepl -c @
 Value
 
 $ echo '@{VAR}' | ./envrepl -c @
-Value
+@{VAR}
 
 $ echo '@{VAR}' | ./envrepl -c @ -p "MY_" -s
 Value
 
-$ echo '@{VAR}' | ./envrepl -c @ -p "MY_" -s
-Value
+$ echo '@{VAR2:defaultValue}' | ./envrepl -c @ -p "MY_" -s
+defaultValue
 
 $ echo '@{MISSING_VAR:{\}}'  > test.txt
 $ cat test.txt
